@@ -72,21 +72,21 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>D:\程序\HotKeySetter\HotKeySetterStatic</OutDir>
+    <OutDir>C:\Users\31129\Desktop\vs相关文件\HotKeySetter\HotKeySetter\bin\Debug</OutDir>
     <IntDir>.</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>D:\程序\HotKeySetter\HotKeySetterStatic</OutDir>
+    <OutDir>C:\Users\31129\Desktop\vs相关文件\HotKeySetter\HotKeySetter\bin\Debug</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>D:\程序\HotKeySetter\HotKeySetterStatic</OutDir>
+    <OutDir>C:\Users\31129\Desktop\vs相关文件\HotKeySetter\HotKeySetter\bin\Debug</OutDir>
     <IntDir>.</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>D:\程序\HotKeySetter\HotKeySetterStatic</OutDir>
+    <OutDir>C:\Users\31129\Desktop\vs相关文件\HotKeySetter\HotKeySetter\bin\Debug</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

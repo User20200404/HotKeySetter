@@ -10,11 +10,18 @@
 #define ENUM_DLL_LOAD_FAILED 1;
 #define ENUM_FUNC_LOAD_FAILED 2;
 
+//事件执行状态常数
+#define EVENT_SUCCESS 0;
+#define EVENT_DLL_LOAD_FAILED 1024;
+#define EVENT_FUNC_CALL_FAILED 1025;
+
+
+
 //错误反馈请求常数
 #define ERR_REPORT_SHOW_MSGBOX 1; //HotKeySetter应显示显式消息框，指示错误内容和所在dll。
 #define ERR_REPORT_WRITE_LOG 2; //HotKeySetter应写出错误日志。
 #define ERR_REPORT_DO_NONE 0; //不作任何操作。
-#define ERR_REPORT_THORW_EXCEPTION 3; //HotKeySetter应抛出异常，指示了错误信息和所在dll。
+#define ERR_REPORT_THORW_EXCEPTION 3; //HotKeySetter应抛出异常，指示错误信息和所在dll。
 #define ERR_REPORT_FATAL 4; //HotKeySetter出现致命错误，应立即退出。(避免使用本标志) 
 
 BOOL APIENTRY DllMain(HMODULE hModule,
@@ -32,8 +39,6 @@ BOOL APIENTRY DllMain(HMODULE hModule,
 	}
 	return TRUE;
 }
-
-
 
 extern "C"  __declspec(dllexport) BOOL SetHotKey(HWND hwnd, int id, UINT fsModifiers, UINT vkcode)
 {
@@ -62,27 +67,45 @@ extern "C" __declspec(dllexport) BOOL SetHotKey_String(HWND hwnd, int id, char* 
 	return RegisterHotKey(hwnd, id, GetfsModifiersFromString(fsModifiers_string), vkcode);
 }
 
-extern "C" __declspec(dllexport) int HotKeyEventMainDelegate(char* dllName,char* entryPoint,int index,char* param)
+/// <summary>
+/// 调用执行函数的函数。
+/// </summary>
+/// <param name="dllName"></param>
+/// <param name="entryPoint"></param>
+/// <param name="index"></param>
+/// <param name="param"></param>
+/// <returns>成功返回dll执行函数的返回值，失败返回特定常量并设置WIN32LastError</returns>
+extern "C" __declspec(dllexport) int HotKeyEventMainDelegate(char* dllName, char* entryPoint, int index, char* param)
 {
-	typedef int (__cdecl *EventMain)(int index,char* param);
+	typedef int(__cdecl* EventMain)(int index, char* param);
+	int ret = 0;
+	int temp_err = 0;
 	HMODULE hDLL = LoadLibraryA(dllName);
 	if (hDLL != NULL)
 	{
 		HANDLE hProc = GetProcAddress(hDLL, entryPoint);
 		if (hProc != NULL)
 		{
-			return ((EventMain)hProc)(index ,param);
+			ret = ((EventMain)hProc)(index, param);
+		}
+		else
+		{
+			temp_err = GetLastError(); //缓存最后错误
+			ret = EVENT_FUNC_CALL_FAILED;
 		}
 		FreeLibrary(hDLL);
+		SetLastError(temp_err); //恢复最后错误
 	}
-	return 0;
+	else ret = EVENT_DLL_LOAD_FAILED;
+
+	return ret;
 }
 
 extern "C" __declspec(dllexport) int HotKeyEventErrorDelegate(char* dllName, char* entryPoint, int index, int errCode, OUT char* errMsg)
 {
 	typedef int(__cdecl* GetErrorMsg)(int index, int errCode, OUT char* errMsg);
-	HMODULE hDLL = LoadLibraryA(dllName);
 	int ret = 0;
+	HMODULE hDLL = LoadLibraryA(dllName);
 	if (hDLL != NULL)
 	{
 		HANDLE hProc = GetProcAddress(hDLL, entryPoint);

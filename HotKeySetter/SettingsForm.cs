@@ -47,7 +47,10 @@ namespace HotKeySetter
             Win32UIApi.AddWindowExstyle(panel_base.Handle, 0, "WS_EX_LAYERED", 0);
             Win32UIApi.AddWindowExstyle(panel_other.Handle, 0, "WS_EX_LAYERED", 0);
 
-            Win32UIApi.SetLayeredWindowAttributes(panel_index.Handle, 0, 0, Win32UIApi.LayeredMode.LWA_ALPHA);
+            if (settings.Bases.Animations.WindowCreatedAnimation)
+                Win32UIApi.SetLayeredWindowAttributes(panel_index.Handle, 0, 0, Win32UIApi.LayeredMode.LWA_ALPHA);
+            else Win32UIApi.SetLayeredWindowAttributes(panel_index.Handle, 0, 255, Win32UIApi.LayeredMode.LWA_ALPHA);
+
             Win32UIApi.SetLayeredWindowAttributes(panel_base.Handle, 0, 0, Win32UIApi.LayeredMode.LWA_ALPHA);
             Win32UIApi.SetLayeredWindowAttributes(panel_other.Handle, 0, 0, Win32UIApi.LayeredMode.LWA_ALPHA);
             lastPanelAnimation.Items.Add(new TimeValidateItem(timeValidateTool));
@@ -58,14 +61,14 @@ namespace HotKeySetter
             panel_All.Show();
             panel_index.Refresh();
         }
+
         /// <summary>
         /// 激活加载动画。
         /// </summary>
         private void PerformLoadAnimation()
         {
-           
             new ControlAnimation(50, 350).FadeIn(panel_settings_label, ControlAnimation.FadeMethod.FromUpToDown, 250);
-            new ControlAnimation(panel_index.Width, 600) { FadeBeginEventHandlerToAdd = LoadAnimationCallBack }.FadeIn(panel_index, ControlAnimation.FadeMethod.FromLeftToRight, 0);
+            new ControlAnimation(panel_index.Width, 600) { FadeBeginEventHandlerToAdd = LoadAnimationCallBack}.FadeIn(panel_index, ControlAnimation.FadeMethod.FromLeftToRight, 0);
             new ControlAnimation(panel_SaveAndApply.Height, 550).FadeIn(panel_SaveAndApply, ControlAnimation.FadeMethod.FromDownToUp, 50);
             new Gradient(button_Settings_Label, "Left", Gradient.ObjectMemberType.Property, this).BeginBezier(displayedButton.Left + 50, 400, ControlAnimation.BezierAnimationInPoints, 150);
         }
@@ -484,7 +487,9 @@ namespace HotKeySetter
 
         private void label_settings_LocationChanged(object sender, EventArgs e)
         {
-            pictureBox_Info.Location = label_settings.Location;
+          //  pictureBox_Info.Location = label_settings.Location;
+            pictureBox_Info.Left = label_settings.Width / 2 - 75;
+            pictureBox_Info.Top = label_settings.Height / 2 + 15;
         }
 
 

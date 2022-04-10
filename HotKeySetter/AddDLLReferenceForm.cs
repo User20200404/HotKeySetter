@@ -51,6 +51,7 @@ namespace HotKeySetter
             if (File.Exists(dialog.FileName))
             {
                 textBox_DllPath.Text = dialog.FileName;
+                button_Validate_Click(null, null);
             }
         }
 
@@ -89,10 +90,12 @@ namespace HotKeySetter
                 result = MessageBox.Show("引用文件需要复制到引用目录，因此不允许添加同名引用。\n\n是否覆盖引用文件？", "引用覆盖", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                 if (!fileExist || result == DialogResult.Yes)
-                Directory.CreateDirectory(ConfigFile.HotKeySetterReferenceDir);
-                File.Copy(textBox_DllPath.Text, newFilePath,true); //将引用文件复制到引用目录。
-                EnumResultAddRequired?.Invoke(new DynamicEventInfo(newFilePath, info.EnumFuncEntryPoint));
-                Close();
+                {
+                    Directory.CreateDirectory(ConfigFile.HotKeySetterReferenceDir);
+                    File.Copy(textBox_DllPath.Text, newFilePath, true); //将引用文件复制到引用目录。
+                    EnumResultAddRequired?.Invoke(new DynamicEventInfo(newFilePath, info.EnumFuncEntryPoint));
+                    Close();
+                }
             }
         }
 

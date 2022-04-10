@@ -1337,5 +1337,14 @@ namespace HotKeySetter
             SaveWindowSizeConfig();
         }
 
+        private void menu_HotKeyItem_Enable_Click(object sender, EventArgs e)
+        {
+            button_Enable_Click(null, null);
+        }
+
+        private void menu_HotKeyItem_Disable_Click(object sender, EventArgs e)
+        {
+            button_Disable_Click(null, null);
+        }
     }
 }
